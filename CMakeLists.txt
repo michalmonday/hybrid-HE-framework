@@ -33,6 +33,7 @@ set(PLAIN_CIPHS
   masta_4
   masta_5
   hera_5
+  my_basic_algorithm
 )
 
 set(SEAL_CIPHS
@@ -97,6 +98,7 @@ set(TFHE_CIPHS
   kreyvium
   kreyvium_12
   kreyvium_13
+  my_basic_algorithm
 )
 
 include(CheckCCompilerFlag)

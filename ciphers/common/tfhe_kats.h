@@ -194,6 +194,7 @@ class TFHEKnownAnswerTest {
       }
     }
 
+
     // random bias
     matrix::vector b;
     b.reserve(N);
@@ -217,10 +218,43 @@ class TFHEKnownAnswerTest {
 
     std::cout << "...done" << std::endl;
 
+    std::cout << std::endl;
+    std::cout << "Random matrix 'm': " << std::endl;
+    for (size_t i = 0; i < N; i++) {
+      for (size_t j = 0; j < N; j++) {
+        std::cout << m[i][j] << " ";
+      }
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "Random bias 'b': " << std::endl;
+    for (size_t i = 0; i < N; i++) {
+      std::cout << b[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+
+
+    std::cout << "Random input vector 'vi': " << std::endl;
+    for (size_t i = 0; i < N; i++) {
+      std::cout << vi[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+
+
+    std::cout << "Plain output vector 'vo' formula: vo = m * vi + b" << std::endl;
+    std::cout << "Plain output vector 'vo': " << std::endl;
+    for (size_t i = 0; i < N; i++) {
+      std::cout << vo[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+
     std::cout << "Encrypting input..." << std::flush;
     typename T::Plain plain_cipher(key);
     std::vector<uint8_t> vi_encoded;
     utils::encode(vi_encoded, vi, BITSIZE);
+
+
     time_start = std::chrono::high_resolution_clock::now();
     std::vector<uint8_t> ciph = plain_cipher.encrypt(vi_encoded, BITSIZE * N);
     time_end = std::chrono::high_resolution_clock::now();
@@ -228,6 +262,20 @@ class TFHEKnownAnswerTest {
         time_end - time_start);
     std::cout << "...done" << std::endl;
     std::cout << "Time: " << time_diff.count() << " milliseconds" << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Encoding splits each input vector value (16 bit originally) into 8 bits, and reverses their order." << std::endl;
+    std::cout << "Encoded input vector 'vi_encoded': " << std::endl;
+    for (size_t i = 0; i < vi_encoded.size(); i++) {
+      std::cout << (int)vi_encoded[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+
+    std::cout << "Encrypted (symmetrically) and encoded input vector 'ciph': " << std::endl;
+    for (size_t i = 0; i < ciph.size(); i++) {
+      std::cout << (int)ciph[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
 
     std::cout << "HE encrypting key..." << std::flush;
     T cipher(key, seclevel);

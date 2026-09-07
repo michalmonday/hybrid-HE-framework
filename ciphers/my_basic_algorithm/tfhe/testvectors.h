@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../../common/tfhe_kats.h"
-#include "kreyvium_tfhe.h"
+#include "my_basic_algorithm_tfhe.h"
 
-using namespace KREYVIUM;
+using namespace MY_BASIC_ALGORITHM;
 
-// build an array of KnownAnswerTests for KREYVIUM
-TFHEKnownAnswerTest<KREYVIUM_TFHE> KNOWN_ANSWER_TESTS[] = {
+// build an array of KnownAnswerTests for MY_BASIC_ALGORITHM
+TFHEKnownAnswerTest<MY_BASIC_ALGORITHM_TFHE> KNOWN_ANSWER_TESTS[] = {
     
     // "dec_test()"
     // {
@@ -15,7 +15,7 @@ TFHEKnownAnswerTest<KREYVIUM_TFHE> KNOWN_ANSWER_TESTS[] = {
     //     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
     //     {0x89, 0xA3, 0xB7, 0x00, 0xD9, 0x44},
     //     128,
-    //     TFHEKnownAnswerTest<KREYVIUM_TFHE>::Testcase::DEC,
+    //     TFHEKnownAnswerTest<MY_BASIC_ALGORITHM_TFHE>::Testcase::DEC,
     // },
 
 
@@ -35,7 +35,7 @@ TFHEKnownAnswerTest<KREYVIUM_TFHE> KNOWN_ANSWER_TESTS[] = {
     //     128,
 
     //     // test case type
-    //     TFHEKnownAnswerTest<KREYVIUM_TFHE>::Testcase::USE_CASE,
+    //     TFHEKnownAnswerTest<MY_BASIC_ALGORITHM_TFHE>::Testcase::USE_CASE,
 
     //     // N
     //     5,
@@ -60,7 +60,7 @@ TFHEKnownAnswerTest<KREYVIUM_TFHE> KNOWN_ANSWER_TESTS[] = {
         128,
 
         // test case type
-        TFHEKnownAnswerTest<KREYVIUM_TFHE>::Testcase::USE_CASE,
+        TFHEKnownAnswerTest<MY_BASIC_ALGORITHM_TFHE>::Testcase::USE_CASE,
 
         // N
         2,
