@@ -1,5 +1,6 @@
 #include "my_basic_algorithm_plain.h"
 
+#include <iostream>
 #include <math.h>
 
 namespace MY_BASIC_ALGORITHM {
@@ -50,12 +51,25 @@ std::vector<uint8_t> My_Basic_Algorithm::encrypt(
   // return plaintext;
     std::vector<uint8_t> out = plaintext;
 
+    // NOT
     // for (size_t i = 0; i < bits; i++) {
     //     int index = (7 - i % 8);
     //     int out_i = (i / 8);
     //     int key_bit = (secret_key[out_i] >> index) & 1;
     //     out[out_i] ^= (1 << index);
     // }
+
+    // XOR with secret key
+    for (size_t i = 0; i < bits; i++) {
+        int bit_index = (7 - i % 8);
+        int byte_index = (i / 8);
+        int key_bit = (secret_key[byte_index] >> bit_index) & 1;
+        out[byte_index] ^= (key_bit << bit_index);
+
+        if (i == 0) {
+            std::cout << "Encrypting first bit symmetrically (" << ((plaintext[byte_index] >> bit_index) & 1) << ") with key bit (" << key_bit << ") to: " << ((out[byte_index] >> bit_index) & 1) << std::endl;
+        }
+    }
 
     return out;
 }

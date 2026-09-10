@@ -170,6 +170,7 @@ def plot_torus_wheel(q=64, p=None, highlight_indices=None, point_value=None,
 # ---------------------------------------------------------------------------
 
 def plot_signed_clock(bits=32, n_small_ticks=5, point_values=None, point_value=None,
+                      point_labels=None,
                       title="Torus32 as a signed-integer clock",
                       filename="torus_signed_clock.png"):
     """
@@ -203,8 +204,8 @@ def plot_signed_clock(bits=32, n_small_ticks=5, point_values=None, point_value=N
             continue
         if not isinstance(value, (int, np.integer)):
             raise TypeError("each point_value must be an integer")
-        if not 0 <= value < modulus:
-            raise ValueError(f"each point_value must be between 0 and {modulus - 1}")
+        # if not 0 <= value < modulus:
+        #     raise ValueError(f"each point_value must be between 0 and {modulus - 1}")
 
     n = len(point_values)
     ncols = min(n, 3)
@@ -224,7 +225,9 @@ def plot_signed_clock(bits=32, n_small_ticks=5, point_values=None, point_value=N
     step_deg = 6
     bottom = -np.pi / 2
 
-    for ax, point_value in zip(axes, point_values):
+    for ax, point_value, label in zip(axes, point_values, point_labels or [None] * n):
+        if point_value <= 0:
+            point_value = 2**bits - abs(point_value)
         ax.axis("off")
 
         circle = plt.Circle((0, 0), R, facecolor="white",
@@ -296,7 +299,8 @@ def plot_signed_clock(bits=32, n_small_ticks=5, point_values=None, point_value=N
                 color="darkorange",
                 fontsize=10,
             )
-            ax.set_title(f"point_value = {point_value}", fontsize=12)
+            title_label = f"point_value = {point_value}" if label is None else label
+            ax.set_title(title_label, fontsize=12)
 
         ax.set_xlim(-1.6, 1.6)
         ax.set_ylim(-1.6, 1.6)
@@ -329,7 +333,29 @@ if __name__ == "__main__":
     plot_signed_clock(
         bits=32,
         n_small_ticks=2,
-        point_values=[1 << 29, 1 << 30, 3 << 29, 1 << 31, (1 << 32) - 1],
+        point_values=[
+            # using bootsCONSTANT
+            536870912, 
+            429014745,
+            -1289454158,
+            -779413983,
+            529935465
+
+            # using bootsSymEncrypt
+            # 1274700239,
+            # 429014745,
+            # 186204496,
+            # 1077637411,
+            # 538636507
+            ],
+        point_labels=[
+            'Data first bit (symmetrically encrypted)', 
+            'HE-encrypted symmetric key first bit', 
+            'XOR result (before bootstrapping) - transciphered value \n1/4*2**32 + 2*536870912 + 2*429014745', 
+            # 'XOR result (before bootstrapping) - transciphered value \n1/4*2**32 + 2*1274700239 + 2*429014745', 
+            'XOR result (after bootstrapping) - transciphered value',
+            'Data first bit after decryption'
+            ],
         filename="/home/michal/torus_signed_clock_example.png",
     )
 

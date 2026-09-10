@@ -177,6 +177,7 @@ class TFHEKnownAnswerTest {
   }
 
   bool test() {
+
     std::chrono::high_resolution_clock::time_point time_start, time_end;
     std::chrono::milliseconds time_diff;
 

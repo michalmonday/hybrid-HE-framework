@@ -144,7 +144,7 @@ void TFHECipher::decrypt(e_int& in, uint16_t& out) {
   out = 0;
   size_t bitsize = std::min(sizeof(out) * 8, in.size());
   for (size_t i = 0; i < bitsize; i++) {
-    uint8_t bit = bootsSymDecrypt(&in[i], he_sk) & 0xFF;
+    uint8_t bit = bootsSymDecrypt(&in[i], he_sk, i==0) & 0xFF;
     out |= (bit << i);
   }
 }
@@ -153,7 +153,7 @@ void TFHECipher::decrypt(e_int& in, uint64_t& out) {
   out = 0;
   size_t bitsize = std::min(sizeof(out) * 8, in.size());
   for (size_t i = 0; i < bitsize; i++) {
-    uint8_t bit = bootsSymDecrypt(&in[i], he_sk) & 0xFF;
+    uint8_t bit = bootsSymDecrypt(&in[i], he_sk, i==0) & 0xFF;
     out |= (bit << i);
   }
 }

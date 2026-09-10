@@ -219,6 +219,10 @@ void MY_BASIC_ALGORITHM_TFHE::encrypt_key()
             bit,
             he_sk
         );
+
+        if (i == 0) {
+            std::cout << "Encrypting symmetric key first bit (" << (int)bit << ") to ciphertext: " << secret_key_encrypted[i].b << std::endl;
+        }
     }
 }
 
@@ -331,8 +335,19 @@ TFHECiphertextVec MY_BASIC_ALGORITHM_TFHE::HE_decrypt(
     for (size_t i = 0; i < bits; i++) {
         int ct_bit = (ciphertexts[i / 8] >> (7 - i % 8)) & 1;
 
-        bootsCONSTANT(&out[i], ct_bit, he_pk);
+        // bootsCONSTANT(&out[i], ct_bit, he_pk);
         // bootsNOT(&out[i], &out[i], he_pk);
+
+        // xor ct_bit and the encrypted secret key bit
+        LweSample *ct_bit_encrypted = new_LweSample(he_pk->params->in_out_params);
+        // bootsSymEncrypt(ct_bit_encrypted, ct_bit, he_sk);
+        bootsCONSTANT(ct_bit_encrypted, ct_bit, he_pk);
+        bootsXOR(&out[i], &secret_key_encrypted[i], ct_bit_encrypted, he_pk, i==0);
+
+        if (i == 0) {
+            std::cout << "Transciphering first bit: converting to Torus32 (" << ct_bit << ") to: " << ct_bit_encrypted->b << std::endl;
+            std::cout << "Transciphering first bit: XOR'ing with key bit: " << secret_key_encrypted[i].b << ", resulting in: " << out[i].b << std::endl;
+        }
     }
 
     return out;
@@ -343,7 +358,10 @@ std::vector<uint8_t> MY_BASIC_ALGORITHM_TFHE::decrypt_result(
   size_t size = ceil((double)ciphertexts.size() / 8);
   std::vector<uint8_t> res(size, 0);
   for (size_t i = 0; i < ciphertexts.size(); i++) {
-    uint8_t bit = bootsSymDecrypt(&ciphertexts[i], he_sk) & 0x1;
+    uint8_t bit = bootsSymDecrypt(&ciphertexts[i], he_sk, i==0) & 0x1;
+    if (i == 0) {
+      std::cout << "Decrypting ciphertext first bit (" << ciphertexts[i].b << ") to bit: " << (int)bit << std::endl;
+    }
     res[i / 8] |= (bit << (7 - i % 8));
   }
   return res;
